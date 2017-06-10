@@ -24,7 +24,7 @@
 
                         <div class="form-group">
                             <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" v-on:click="submit()">
                                     Login
                                 </button>
 
@@ -40,11 +40,25 @@
     </div>
 </template>
 <script>
+    import fetchival from 'fetchival';
     export default {
         data() {
             return {
                 email: '',
                 password: ''
+            }
+        },
+        methods : {
+            submit() {
+                fetchival('/login').post({
+                  email: this.email,
+                  password: this.password
+                })
+                .then((json) => {
+                  alert('Hi');
+                },() => {
+                    alert('Error')
+                })
             }
         }
     }

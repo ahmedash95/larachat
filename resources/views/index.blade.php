@@ -43,8 +43,8 @@
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
                     @if (Auth::guest())
-                        <li><a href="#" v-on:click="currentView = 'login'">Login</a></li>
-                        <li><a href="#" v-on:click="currentView = 'register'">Register</a></li>
+                        <li><router-link to="/login">Login</router-link></li>
+                        <li><router-link to="/register">Register</router-link></li>
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -72,7 +72,7 @@
     </nav>
 
     <div class="container">
-        <component :is="currentView"></component>
+        <router-view></router-view>
     </div>
 
 </div>
