@@ -24,7 +24,13 @@
 
                         <div class="form-group">
                             <div class="col-md-8 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary" v-on:click="submit()">
+                                <button
+                                        type="submit"
+                                        class="btn btn-primary"
+                                        v-on:click="submit()"
+                                        :disabled="loading"
+                                >
+                                    <i class="fa fa-spin fa-spinner" v-show="loading"> </i>
                                     Login
                                 </button>
 
@@ -41,23 +47,35 @@
 </template>
 <script>
     import fetchival from 'fetchival';
+    import {clientId, clientSecret} from './../config.js'
     export default {
         data() {
             return {
                 email: '',
-                password: ''
+                password: '',
+                loading: false,
             }
         },
-        methods : {
+        methods: {
             submit() {
-                fetchival('/login').post({
-                  email: this.email,
-                  password: this.password
-                })
-                .then((json) => {
-                  alert('Hi');
-                },() => {
-                    alert('Error')
+                self = this;
+                self.loading = true;
+                let data = {
+                    grant_type: 'password',
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    username: self.email,
+                    password: self.password,
+                    scope: '',
+                }
+                fetchival('/oauth/token').post(data)
+                    .then((response) => {
+                        self.$auth.setToken(response.access_token, response.expires_in + Date.now());
+                        self.$router.push('home');
+                    }).catch((error) => {
+                    alert('Error');
+                }).then(() => {
+                    self.loading = false;
                 })
             }
         }
